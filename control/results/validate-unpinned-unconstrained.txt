@@ -1,0 +1,4 @@
+# dogwood validate control/counterexamples/unpinned-unconstrained.dw --policy-schema control/schema.cedarschema
+OK: validation passed with no errors or warnings.
+# dogwood validate control/counterexamples/unpinned-unconstrained.dw --policy-schema control/schema.cedarschema --event-schema configuration/event-schemas/unpinned.dwschema
+OK: validation passed with no errors or warnings.

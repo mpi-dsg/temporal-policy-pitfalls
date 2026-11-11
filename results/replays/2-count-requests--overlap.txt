@@ -1,0 +1,3 @@
+# dogwood replay policies/2-count-requests.dw --policy-schema schema/refund.cedarschema --trace traces/overlap.log
+@10 (time point 0): ALLOW  [rules: 0]
+@11 (time point 1): DENY

@@ -1,0 +1,9 @@
+// Fifth candidate: anchor to the approval, but watch responses, so the request
+// being decided cannot match the negated left operand and deny its own first use.
+@id("refund_once_since_approval_response_kind")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal {
+    !Drupe::Action::"Refund"::response{ input.claimId: context.input.claimId }
+    since within 15m
+    Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true }
+};

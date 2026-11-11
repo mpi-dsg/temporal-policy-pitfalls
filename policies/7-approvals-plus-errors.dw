@@ -1,0 +1,13 @@
+// Seventh candidate, from adversarial review. Ration by approvals and forgive one
+// retry per error: requests == errors + approvals. Needs experimental-arithmetic.
+@id("refund_requests_equal_errors_plus_approvals")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal {
+    (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t))
+    )) == (count for (u: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::error{ input.claimId: context.input.claimId } && tp(u))
+    )) + (count for (v: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true } && tp(v))
+    ))
+};

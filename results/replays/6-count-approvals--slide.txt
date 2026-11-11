@@ -1,0 +1,4 @@
+# dogwood replay policies/6-count-approvals.dw --policy-schema schema/refund.cedarschema --trace traces/slide.log
+@10 (time point 0): ALLOW  [rules: 0]
+@905 (time point 1): DENY
+@915 (time point 2): DENY

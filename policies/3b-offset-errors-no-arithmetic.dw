@@ -1,0 +1,10 @@
+// Third candidate, variant: the arithmetic-free rewrite. No disjunction exists in the
+// temporal sublanguage ("If you need 'A or B', write two separate policy rules"),
+// so each tolerated retry count needs its own rule. Bounded here at one retry.
+@id("refund_once_first_attempt")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal { formerly within 15m Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true } && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::response{ input.claimId: context.input.claimId } && tp(t)) )) == 0 && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t)) )) == 1 && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::error{ input.claimId: context.input.claimId } && tp(t)) )) == 0 };
+
+@id("refund_once_after_one_error")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal { formerly within 15m Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true } && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::response{ input.claimId: context.input.claimId } && tp(t)) )) == 0 && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t)) )) == 2 && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::error{ input.claimId: context.input.claimId } && tp(t)) )) == 1 };

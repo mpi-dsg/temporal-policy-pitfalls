@@ -1,0 +1,22 @@
+// A variant of the control WITHOUT the callerPrincipal constraint on the approval.
+// Kept as a counterexample: correct under the pinned default, unsafe under unpinned,
+// where Alice can spend Bob's approval. See ../README.md.
+@id("one_approval_one_refund_unconstrained_principal")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    formerly within 15m Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        requestId:       context.input.approvalId,
+        output.approved: true
+    }
+    && (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{
+            input.claimId:    context.input.claimId,
+            input.approvalId: context.input.approvalId
+        } && tp(t))
+    )) == 1
+};

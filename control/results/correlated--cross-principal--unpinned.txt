@@ -1,0 +1,2 @@
+# dogwood replay control/one-approval-one-refund-correlated.dw --policy-schema control/schema.cedarschema --event-schema configuration/event-schemas/unpinned.dwschema --trace control/counterexamples/cross-principal.log
+@10 (time point 0): DENY

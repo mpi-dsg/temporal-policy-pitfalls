@@ -1,0 +1,7 @@
+@id("probe_anchor_reachable")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal {
+    !Drupe::Action::"Approve"::request{ input.claimId: context.input.claimId }
+    since within 15m
+    Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true }
+};

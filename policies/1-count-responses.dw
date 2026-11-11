@@ -1,0 +1,22 @@
+// First candidate: consume the approval on the RESPONSE kind.
+// One-time approval, consuming on the RESPONSE kind.
+// This follows the accounting AWS's own `refund_budget_settled_plus_current`
+// example recommends: "Counting responses is also the more accurate
+// accounting: a denied refund does not consume budget."
+@id("refund_once_per_approval_response_kind")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    formerly within 15m Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        output.approved: true
+    }
+    && (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::response{
+            input.claimId: context.input.claimId
+        } && tp(t))
+    )) == 0
+};

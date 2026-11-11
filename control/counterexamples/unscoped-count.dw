@@ -1,0 +1,28 @@
+// SUPERSEDED. The first version of the correlated policy, kept as a counterexample.
+// Its count joins on approvalId alone, so a refund request for a DIFFERENT claim that
+// names this approval is counted against it, even when the gateway denied that request.
+// See counterexamples/wrong-claim.log and ../README.md. Fixed by adding input.claimId
+// to the count body.
+//
+// Built from the two constructions a Dogwood author supplied:
+// a correlation field scoping the count to one particular approval, and a nested
+// temporal operator ordering the approval before the refund it authorizes.
+@id("one_approval_one_refund_correlated")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    formerly within 15m Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        requestId:       context.input.approvalId,
+        callerPrincipal: principal,
+        output.approved: true
+    }
+    && (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{
+            input.approvalId: context.input.approvalId
+        } && tp(t))
+    )) == 1
+};

@@ -1,0 +1,48 @@
+namespace Drupe {
+  type ApproveInput = {
+    claimId: String
+  };
+
+  type ApproveOutput = {
+    approved: Bool
+  };
+
+  type RefundInput = {
+    claimId: String,
+    amount: Long
+  };
+
+  type RefundOutput = {
+    amount: Long
+  };
+
+  type SystemContext = {
+    now: datetime
+  };
+
+  entity Gateway;
+
+  entity OAuthUser = {
+    id: String
+  } tags String;
+
+  action "Approve" appliesTo {
+    principal: [OAuthUser],
+    resource: [Gateway],
+    context: {
+      input: ApproveInput,
+      output?: ApproveOutput,
+      system: SystemContext
+    }
+  };
+
+  action "Refund" appliesTo {
+    principal: [OAuthUser],
+    resource: [Gateway],
+    context: {
+      input: RefundInput,
+      output?: RefundOutput,
+      system: SystemContext
+    }
+  };
+}

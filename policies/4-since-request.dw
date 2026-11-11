@@ -1,0 +1,22 @@
+// Fourth candidate: anchor the absence to the approval itself, with `since`.
+// "No refund request for this claim has happened since the approval that
+// authorizes it."  This is the open-session idiom from the Dogwood guide
+// (04-temporal-expressions.md, "Negated left"): `!A since within W B`.
+// Unlike a count, the quantity here is scoped to an anchor event rather than
+// to a sliding window.
+@id("refund_once_since_approval")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    !Drupe::Action::"Refund"::request{
+        input.claimId: context.input.claimId
+    }
+    since within 15m
+    Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        output.approved: true
+    }
+};

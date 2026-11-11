@@ -1,0 +1,3 @@
+# dogwood replay control/counterexamples/unscoped-count.dw --policy-schema control/schema.cedarschema --trace control/counterexamples/wrong-claim.log
+@10 (time point 0): DENY
+@20 (time point 1): DENY

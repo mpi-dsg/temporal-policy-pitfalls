@@ -1,0 +1,4 @@
+# dogwood replay policies/3-offset-errors.dw --policy-schema schema/refund.cedarschema --trace traces/slide.log
+@10 (time point 0): ALLOW  [rules: 0]
+@905 (time point 1): ALLOW  [rules: 0]
+@915 (time point 2): ALLOW  [rules: 0]

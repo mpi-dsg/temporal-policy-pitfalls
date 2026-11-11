@@ -1,0 +1,4 @@
+# dogwood replay control/one-approval-one-refund-correlated.dw --policy-schema control/schema.cedarschema --event-schema configuration/event-schemas/unpinned.dwschema --trace control/traces/slide.log
+@10 (time point 0): ALLOW  [rules: 0]
+@905 (time point 1): ALLOW  [rules: 0]
+@915 (time point 2): DENY

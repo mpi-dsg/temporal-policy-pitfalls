@@ -1,0 +1,2 @@
+# dogwood validate policies/5-since-response.dw --policy-schema schema/refund.cedarschema
+OK: validation passed with no errors or warnings.

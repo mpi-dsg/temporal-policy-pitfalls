@@ -1,0 +1,3 @@
+# dogwood replay control/one-approval-one-refund-correlated.dw --policy-schema control/schema.cedarschema --trace control/traces/error.log
+@10 (time point 0): ALLOW  [rules: 0]
+@20 (time point 1): DENY

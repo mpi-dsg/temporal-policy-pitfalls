@@ -1,0 +1,3 @@
+# dogwood validate policies/7-approvals-plus-errors.dw --policy-schema schema/refund.cedarschema
+warning: arithmetic operators are experimental and may change in a future release
+OK: validation passed (1 warning(s)).

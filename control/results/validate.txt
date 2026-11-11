@@ -1,0 +1,2 @@
+# dogwood validate control/one-approval-one-refund-correlated.dw --policy-schema control/schema.cedarschema
+OK: validation passed with no errors or warnings.

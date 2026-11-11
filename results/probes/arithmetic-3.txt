@@ -1,0 +1,13 @@
+# dogwood validate probes/arithmetic-3.dw --policy-schema schema/refund.cedarschema
+  × arithmetic in comparison operands is not yet supported
+   ╭─[4:5]
+ 3 │     when temporal {
+ 4 │ ╭─▶     formerly within 15m Drupe::Action::"Approve"::response{
+ 5 │ │           input.claimId:   context.input.claimId,
+ 6 │ │           output.approved: true
+ 7 │ │       }
+ 8 │ ├─▶     && (count for (t: Timepoint). where ( formerly within 15m (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t)) )) + 0 == 1
+   · ╰──── arithmetic in comparison operands is not yet supported
+ 9 │     };
+   ╰────
+

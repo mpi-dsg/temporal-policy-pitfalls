@@ -1,0 +1,2 @@
+# dogwood validate policies/3b-offset-errors-no-arithmetic.dw --policy-schema schema/refund.cedarschema
+OK: validation passed with no errors or warnings.

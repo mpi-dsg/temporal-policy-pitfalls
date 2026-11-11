@@ -1,0 +1,22 @@
+// Sixth candidate, from adversarial review. Compare the refund-request count to the
+// APPROVAL count rather than to a constant. Windows are closed and reflexive, so the
+// request under decision is already counted (A-Observe). One approval, one refund
+// becomes "as many refunds as approvals." No arithmetic, so a default build accepts it.
+@id("refund_requests_match_approvals")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{
+            input.claimId: context.input.claimId
+        } && tp(t))
+    )) == (count for (u: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Approve"::response{
+            input.claimId:   context.input.claimId,
+            output.approved: true
+        } && tp(u))
+    ))
+};

@@ -1,0 +1,25 @@
+// A correlated positive control, built from the two constructions a Dogwood author
+// supplied: a correlation field scoping the count to one particular approval, and a
+// `formerly` inside the `count for ... where` body, so the count ranges over the
+// correlated requests. Correct on this corpus under both event schemas, not proven
+// correct in general. See README.md.
+@id("one_approval_one_refund_correlated")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    formerly within 15m Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        requestId:       context.input.approvalId,
+        callerPrincipal: principal,
+        output.approved: true
+    }
+    && (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{
+            input.claimId:    context.input.claimId,
+            input.approvalId: context.input.approvalId
+        } && tp(t))
+    )) == 1
+};

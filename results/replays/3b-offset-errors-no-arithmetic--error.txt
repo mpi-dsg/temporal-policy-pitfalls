@@ -1,0 +1,3 @@
+# dogwood replay policies/3b-offset-errors-no-arithmetic.dw --policy-schema schema/refund.cedarschema --trace traces/error.log
+@10 (time point 0): ALLOW  [rules: 0]
+@20 (time point 1): ALLOW  [rules: 1]

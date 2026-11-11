@@ -1,0 +1,21 @@
+// Second candidate: consume the approval on the REQUEST kind.
+// One-time approval, consuming on the REQUEST kind.
+// Windows are closed and reflexive, so the count includes the in-flight
+// request being decided; hence == 1 rather than == 0.
+@id("refund_once_per_approval_request_kind")
+permit (
+    principal,
+    action == Drupe::Action::"Refund",
+    resource
+)
+when temporal {
+    formerly within 15m Drupe::Action::"Approve"::response{
+        input.claimId:   context.input.claimId,
+        output.approved: true
+    }
+    && (count for (t: Timepoint). where (
+        formerly within 15m (Drupe::Action::"Refund"::request{
+            input.claimId: context.input.claimId
+        } && tp(t))
+    )) == 1
+};

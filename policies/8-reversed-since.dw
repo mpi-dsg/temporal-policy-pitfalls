@@ -1,0 +1,14 @@
+// Eighth candidate, from adversarial review. Reverse the anchor: count the refund
+// requests that have no successful approval after them, and require exactly one.
+@id("refund_reversed_since")
+permit ( principal, action == Drupe::Action::"Refund", resource )
+when temporal {
+    (count for (t: Timepoint). where (
+        formerly within 15m (
+            (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t))
+            && !Drupe::Action::"Approve"::response{ input.claimId: context.input.claimId, output.approved: true }
+              since within 15m
+              (Drupe::Action::"Refund"::request{ input.claimId: context.input.claimId } && tp(t))
+        )
+    )) == 1
+};
